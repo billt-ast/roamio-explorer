@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
-import { Star, MapPin } from "lucide-react";
-import type { ReactNode } from "react";
+import { Star, MapPin, ArrowRight } from "lucide-react";
 
 export type PreviewCard = {
   image: string;
@@ -13,14 +12,22 @@ export type PreviewCard = {
 };
 
 export function CategoryRow({
-  eyebrow, title, description, cards, action,
+  eyebrow,
+  title,
+  description,
+  cards,
+  viewAllHref,
+  viewAllLabel = "View all",
 }: {
   eyebrow: string;
   title: string;
   description: string;
   cards: PreviewCard[];
-  action?: ReactNode;
+  viewAllHref?: string;
+  viewAllLabel?: string;
 }) {
+  const visible = cards.slice(0, 4);
+
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 sm:py-24">
       <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
@@ -35,11 +42,20 @@ export function CategoryRow({
             {description}
           </p>
         </div>
-        {action}
+        {viewAllHref && (
+          <a
+            href={viewAllHref}
+            className="hidden items-center gap-1.5 rounded-full border border-border bg-white px-5 py-2.5 text-sm font-semibold text-foreground shadow-soft transition-all hover:shadow-float sm:inline-flex"
+          >
+            {viewAllLabel}
+            <ArrowRight className="h-4 w-4" />
+          </a>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((c, i) => (
+      {/* Mobile: vertical stack of ~70vh tiles. Desktop: 4-col grid. */}
+      <div className="flex flex-col gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-4">
+        {visible.map((c, i) => (
           <motion.article
             key={c.title}
             initial={{ opacity: 0, y: 30 }}
@@ -47,9 +63,9 @@ export function CategoryRow({
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
             whileHover={{ y: -6 }}
-            className="group cursor-pointer overflow-hidden rounded-3xl bg-card shadow-soft transition-shadow hover:shadow-float"
+            className="group flex h-[70vh] cursor-pointer flex-col overflow-hidden rounded-3xl bg-card shadow-soft transition-shadow hover:shadow-float sm:h-auto"
           >
-            <div className="relative aspect-[4/3] overflow-hidden">
+            <div className="relative flex-1 overflow-hidden sm:aspect-[4/3] sm:flex-none">
               <img
                 src={c.image}
                 alt={c.title}
@@ -89,6 +105,18 @@ export function CategoryRow({
           </motion.article>
         ))}
       </div>
+
+      {viewAllHref && (
+        <div className="mt-8 flex justify-center sm:hidden">
+          <a
+            href={viewAllHref}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-foreground shadow-soft"
+          >
+            {viewAllLabel}
+            <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+      )}
     </section>
   );
 }

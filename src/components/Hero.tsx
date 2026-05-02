@@ -1,23 +1,47 @@
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, MapPin, Sparkles } from "lucide-react";
 import { SearchTabs } from "./SearchTabs";
-import heroImg from "@/assets/hero-kenya.jpg";
+import heroKenya from "@/assets/hero-kenya.jpg";
+import heroSunset from "@/assets/hero-sunset.jpg";
+import stayLoft from "@/assets/stay-aesthetic-loft.jpg";
+import stayBalcony from "@/assets/stay-urban-balcony.jpg";
+import stayRooftop from "@/assets/stay-rooftop-lights.jpg";
+
+const slides = [
+  { src: heroKenya, alt: "Kenya savanna at golden hour" },
+  { src: stayLoft, alt: "Aesthetic boho living room stay" },
+  { src: heroSunset, alt: "Coastal sunset over Diani" },
+  { src: stayBalcony, alt: "Urban balcony retreat at dusk" },
+  { src: stayRooftop, alt: "Rooftop terrace with string lights" },
+];
 
 export function Hero() {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setI((p) => (p + 1) % slides.length), 5500);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <section className="relative isolate overflow-hidden">
-      {/* Background image */}
       <div className="absolute inset-0 -z-10">
-        <img
-          src={heroImg}
-          alt="Kenya savanna at golden hour"
-          className="h-full w-full object-cover"
-        />
+        <AnimatePresence mode="sync">
+          <motion.img
+            key={i}
+            src={slides[i].src}
+            alt={slides[i].alt}
+            initial={{ opacity: 0, scale: 1.06 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </AnimatePresence>
         <div className="absolute inset-0 bg-hero-veil" />
       </div>
 
       <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-4 pb-10 pt-32 sm:px-6 sm:pb-16 sm:pt-40">
-        {/* Geo banner */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -71,7 +95,6 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Search */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -80,6 +103,20 @@ export function Hero() {
         >
           <SearchTabs />
         </motion.div>
+
+        {/* Slide indicators */}
+        <div className="mt-8 flex items-center gap-2">
+          {slides.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setI(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
+              className={`h-1.5 rounded-full transition-all duration-500 ${
+                idx === i ? "w-8 bg-white" : "w-3 bg-white/40 hover:bg-white/70"
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
