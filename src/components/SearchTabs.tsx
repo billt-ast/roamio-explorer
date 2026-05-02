@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  BedDouble, Car, Compass, Plane, Cab, UtensilsCrossed,
+  BedDouble, Car, Compass, Plane, CarTaxiFront as Taxi, UtensilsCrossed,
   Map, Moon, FileCheck, Search, MapPin, Calendar, Users,
 } from "lucide-react";
-
-// lucide doesn't export Cab — alias
-import { Car as Taxi } from "lucide-react";
 
 const TABS = [
   { id: "stays", label: "Stays", icon: BedDouble },
