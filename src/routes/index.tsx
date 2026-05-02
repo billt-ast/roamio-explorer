@@ -3,15 +3,21 @@ import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { CategoryRow } from "@/components/CategoryRow";
 import { JourneyStrip } from "@/components/JourneyStrip";
-import { Destinations } from "@/components/Destinations";
+import { CountryHighlights } from "@/components/CountryHighlights";
 import { Footer } from "@/components/Footer";
 
-import stayMara from "@/assets/stay-mara.jpg";
-import stayNairobi from "@/assets/stay-nairobi.jpg";
-import stayDiani from "@/assets/stay-diani.jpg";
-import expSafari from "@/assets/exp-safari.jpg";
-import expBalloon from "@/assets/exp-balloon.jpg";
-import foodKenya from "@/assets/food-kenya.jpg";
+import stayCozy from "@/assets/stay-cozy-livingroom.jpg";
+import stayLoft from "@/assets/stay-aesthetic-loft.jpg";
+import stayBalcony from "@/assets/stay-urban-balcony.jpg";
+import stayRooftop from "@/assets/stay-rooftop-lights.jpg";
+import stayRainy from "@/assets/stay-rainy-balcony.jpg";
+import staySpa from "@/assets/stay-spa-bath.jpg";
+import stayOverwater from "@/assets/stay-overwater-hut.jpg";
+
+import expSpa from "@/assets/stay-spa-bath.jpg";
+import expCozy from "@/assets/stay-cozy-livingroom.jpg";
+import expRooftop from "@/assets/stay-rooftop-lights.jpg";
+import expOverwater from "@/assets/stay-overwater-hut.jpg";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -34,7 +40,16 @@ export const Route = createFileRoute("/")({
 
 const stayCards = [
   {
-    image: stayMara,
+    image: stayLoft,
+    title: "Westlands Sky Penthouse",
+    location: "Nairobi",
+    price: "$180",
+    priceUnit: "/night",
+    rating: 4.82,
+    badge: "City favourite",
+  },
+  {
+    image: stayCozy,
     title: "Mara Skyline Tented Suite",
     location: "Maasai Mara",
     price: "$420",
@@ -43,15 +58,7 @@ const stayCards = [
     badge: "Hero stay",
   },
   {
-    image: stayNairobi,
-    title: "Westlands Sky Penthouse",
-    location: "Nairobi",
-    price: "$180",
-    priceUnit: "/night",
-    rating: 4.82,
-  },
-  {
-    image: stayDiani,
+    image: stayOverwater,
     title: "Diani Beachfront Villa",
     location: "Diani Beach",
     price: "$310",
@@ -59,11 +66,44 @@ const stayCards = [
     rating: 4.9,
     badge: "Coast favourite",
   },
+  {
+    image: stayBalcony,
+    title: "Karen Garden Loft",
+    location: "Karen, Nairobi",
+    price: "$140",
+    priceUnit: "/night",
+    rating: 4.78,
+  },
+  {
+    image: stayRainy,
+    title: "Kilimani Rain Studio",
+    location: "Nairobi",
+    price: "$95",
+    priceUnit: "/night",
+    rating: 4.71,
+  },
+  {
+    image: staySpa,
+    title: "Naivasha Spa Cabin",
+    location: "Lake Naivasha",
+    price: "$220",
+    priceUnit: "/night",
+    rating: 4.88,
+    badge: "Wellness",
+  },
+  {
+    image: stayRooftop,
+    title: "Lamu Rooftop Riad",
+    location: "Lamu Old Town",
+    price: "$260",
+    priceUnit: "/night",
+    rating: 4.93,
+  },
 ];
 
 const expCards = [
   {
-    image: expSafari,
+    image: expCozy,
     title: "Big Five Sunset Game Drive",
     location: "Maasai Mara",
     price: "$160",
@@ -72,7 +112,7 @@ const expCards = [
     badge: "Most loved",
   },
   {
-    image: expBalloon,
+    image: expRooftop,
     title: "Hot Air Balloon Sunrise",
     location: "Maasai Mara",
     price: "$480",
@@ -80,13 +120,21 @@ const expCards = [
     rating: 4.99,
   },
   {
-    image: foodKenya,
+    image: expSpa,
     title: "Nyama Choma Tasting Trail",
     location: "Nairobi",
     price: "$45",
     priceUnit: "/person",
     rating: 4.78,
     badge: "Local",
+  },
+  {
+    image: expOverwater,
+    title: "Wasini Dhow & Snorkel Day",
+    location: "South Coast",
+    price: "$120",
+    priceUnit: "/person",
+    rating: 4.86,
   },
 ];
 
@@ -96,11 +144,14 @@ function Index() {
       <Navbar />
       <main>
         <Hero />
+        <CountryHighlights />
         <CategoryRow
           eyebrow="Stays"
           title="Sleep where the story begins."
           description="Hand-picked tented camps, beach villas and city sanctuaries across Kenya — vetted by our local hosts."
           cards={stayCards}
+          viewAllHref="/kenya/stays"
+          viewAllLabel="View all stays"
         />
         <JourneyStrip />
         <CategoryRow
@@ -108,8 +159,9 @@ function Index() {
           title="Days you'll talk about forever."
           description="Safaris, sunrise flights, cultural deep-dives and culinary trails — booked seamlessly alongside your stay."
           cards={expCards}
+          viewAllHref="/kenya/experiences"
+          viewAllLabel="View all experiences"
         />
-        <Destinations />
         <Footer />
       </main>
     </div>
