@@ -10,8 +10,8 @@ export const Route = createFileRoute("/$country/$service/")({
   loader: ({ params }) => {
     const country = getCountry(params.country);
     if (!country) throw notFound();
-    if (!SERVICES.includes(params.service as ServiceSlug)) throw notFound();
     const service = params.service as ServiceSlug;
+    if (!SERVICES.includes(service)) throw notFound();
     return { country, service, items: country.services[service] ?? [] };
   },
   head: ({ loaderData }) => ({
