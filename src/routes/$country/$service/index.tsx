@@ -28,7 +28,10 @@ export const Route = createFileRoute("/$country/$service/")({
 });
 
 function ServiceList() {
-  const { country, service, items } = Route.useLoaderData();
+  const data = Route.useLoaderData();
+  const country = data.country;
+  const service = data.service as ServiceSlug;
+  const items = data.items as import("@/data/countries").Listing[];
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Navbar />

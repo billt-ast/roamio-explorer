@@ -33,7 +33,10 @@ export const Route = createFileRoute("/$country/$service/$id")({
 });
 
 function ListingDetail() {
-  const { country, service, listing } = Route.useLoaderData();
+  const data = Route.useLoaderData();
+  const country = data.country;
+  const service = data.service as ServiceSlug;
+  const listing = data.listing;
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Navbar />

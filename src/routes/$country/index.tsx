@@ -62,7 +62,7 @@ function CountryHub() {
         )}
 
         {services.map((s) => {
-          const items = country.services[s] ?? [];
+          const items = (country.services[s] ?? []) as import("@/data/countries").Listing[];
           return (
             <CategoryRow
               key={s}
