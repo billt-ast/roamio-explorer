@@ -9,11 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CountryIndexRouteImport } from './routes/$country/index'
 import { Route as CountryServiceIndexRouteImport } from './routes/$country/$service/index'
 import { Route as CountryServiceIdRouteImport } from './routes/$country/$service/$id'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +49,16 @@ const CountryServiceIdRoute = CountryServiceIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/auth': typeof AuthRoute
   '/$country/': typeof CountryIndexRoute
   '/$country/$service/$id': typeof CountryServiceIdRoute
   '/$country/$service/': typeof CountryServiceIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/auth': typeof AuthRoute
   '/$country': typeof CountryIndexRoute
   '/$country/$service/$id': typeof CountryServiceIdRoute
   '/$country/$service': typeof CountryServiceIndexRoute
@@ -50,6 +66,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/auth': typeof AuthRoute
   '/$country/': typeof CountryIndexRoute
   '/$country/$service/$id': typeof CountryServiceIdRoute
   '/$country/$service/': typeof CountryServiceIndexRoute
@@ -58,14 +76,24 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
+    | '/auth'
     | '/$country/'
     | '/$country/$service/$id'
     | '/$country/$service/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$country' | '/$country/$service/$id' | '/$country/$service'
+  to:
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/$country'
+    | '/$country/$service/$id'
+    | '/$country/$service'
   id:
     | '__root__'
     | '/'
+    | '/admin'
+    | '/auth'
     | '/$country/'
     | '/$country/$service/$id'
     | '/$country/$service/'
@@ -73,6 +101,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  AuthRoute: typeof AuthRoute
   CountryIndexRoute: typeof CountryIndexRoute
   CountryServiceIdRoute: typeof CountryServiceIdRoute
   CountryServiceIndexRoute: typeof CountryServiceIndexRoute
@@ -80,6 +110,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -113,6 +157,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  AuthRoute: AuthRoute,
   CountryIndexRoute: CountryIndexRoute,
   CountryServiceIdRoute: CountryServiceIdRoute,
   CountryServiceIndexRoute: CountryServiceIndexRoute,
