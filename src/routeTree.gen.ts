@@ -10,33 +10,72 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CountryIndexRouteImport } from './routes/$country/index'
+import { Route as CountryServiceIndexRouteImport } from './routes/$country/$service/index'
+import { Route as CountryServiceIdRouteImport } from './routes/$country/$service/$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CountryIndexRoute = CountryIndexRouteImport.update({
+  id: '/$country/',
+  path: '/$country/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CountryServiceIndexRoute = CountryServiceIndexRouteImport.update({
+  id: '/$country/$service/',
+  path: '/$country/$service/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CountryServiceIdRoute = CountryServiceIdRouteImport.update({
+  id: '/$country/$service/$id',
+  path: '/$country/$service/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$country/': typeof CountryIndexRoute
+  '/$country/$service/$id': typeof CountryServiceIdRoute
+  '/$country/$service/': typeof CountryServiceIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$country': typeof CountryIndexRoute
+  '/$country/$service/$id': typeof CountryServiceIdRoute
+  '/$country/$service': typeof CountryServiceIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$country/': typeof CountryIndexRoute
+  '/$country/$service/$id': typeof CountryServiceIdRoute
+  '/$country/$service/': typeof CountryServiceIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/$country/'
+    | '/$country/$service/$id'
+    | '/$country/$service/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/$country' | '/$country/$service/$id' | '/$country/$service'
+  id:
+    | '__root__'
+    | '/'
+    | '/$country/'
+    | '/$country/$service/$id'
+    | '/$country/$service/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CountryIndexRoute: typeof CountryIndexRoute
+  CountryServiceIdRoute: typeof CountryServiceIdRoute
+  CountryServiceIndexRoute: typeof CountryServiceIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +87,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$country/': {
+      id: '/$country/'
+      path: '/$country'
+      fullPath: '/$country/'
+      preLoaderRoute: typeof CountryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$country/$service/': {
+      id: '/$country/$service/'
+      path: '/$country/$service'
+      fullPath: '/$country/$service/'
+      preLoaderRoute: typeof CountryServiceIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$country/$service/$id': {
+      id: '/$country/$service/$id'
+      path: '/$country/$service/$id'
+      fullPath: '/$country/$service/$id'
+      preLoaderRoute: typeof CountryServiceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CountryIndexRoute: CountryIndexRoute,
+  CountryServiceIdRoute: CountryServiceIdRoute,
+  CountryServiceIndexRoute: CountryServiceIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
