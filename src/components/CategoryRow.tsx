@@ -9,6 +9,7 @@ export type PreviewCard = {
   priceUnit?: string;
   rating: number;
   badge?: string;
+  href?: string;
 };
 
 export function CategoryRow({
@@ -56,7 +57,8 @@ export function CategoryRow({
       {/* Mobile: vertical stack of ~70vh tiles. Desktop: 4-col grid. */}
       <div className="flex flex-col gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-4">
         {visible.map((c, i) => (
-          <motion.article
+          <motion.a
+            href={c.href ?? "#"}
             key={c.title}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -102,7 +104,7 @@ export function CategoryRow({
                 </span>
               </div>
             </div>
-          </motion.article>
+          </motion.a>
         ))}
       </div>
 
