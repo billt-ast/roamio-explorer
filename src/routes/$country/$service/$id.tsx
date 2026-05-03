@@ -10,8 +10,8 @@ export const Route = createFileRoute("/$country/$service/$id")({
   loader: ({ params }) => {
     const country = getCountry(params.country);
     if (!country) throw notFound();
-    if (!SERVICES.includes(params.service as ServiceSlug)) throw notFound();
     const service = params.service as ServiceSlug;
+    if (!SERVICES.includes(service)) throw notFound();
     const listing = getListing(params.country, service, params.id);
     if (!listing) throw notFound();
     return { country, service, listing };
@@ -33,7 +33,10 @@ export const Route = createFileRoute("/$country/$service/$id")({
 });
 
 function ListingDetail() {
-  const { country, service, listing } = Route.useLoaderData();
+  const data = Route.useLoaderData();
+  const country = data.country;
+  const service = data.service as ServiceSlug;
+  const listing = data.listing;
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Navbar />

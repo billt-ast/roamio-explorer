@@ -10,8 +10,8 @@ export const Route = createFileRoute("/$country/$service/")({
   loader: ({ params }) => {
     const country = getCountry(params.country);
     if (!country) throw notFound();
-    if (!SERVICES.includes(params.service as ServiceSlug)) throw notFound();
     const service = params.service as ServiceSlug;
+    if (!SERVICES.includes(service)) throw notFound();
     return { country, service, items: country.services[service] ?? [] };
   },
   head: ({ loaderData }) => ({
@@ -28,7 +28,10 @@ export const Route = createFileRoute("/$country/$service/")({
 });
 
 function ServiceList() {
-  const { country, service, items } = Route.useLoaderData();
+  const data = Route.useLoaderData();
+  const country = data.country;
+  const service = data.service as ServiceSlug;
+  const items = data.items as import("@/data/countries").Listing[];
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Navbar />
