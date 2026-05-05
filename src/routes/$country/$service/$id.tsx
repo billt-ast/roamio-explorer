@@ -77,9 +77,9 @@ function ListingDetail() {
               <span className="text-3xl font-semibold text-primary">{listing.price}</span>
               {listing.priceUnit && <span className="text-sm text-muted-foreground">{listing.priceUnit}</span>}
             </div>
-            <button className="mt-5 w-full rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-soft transition hover:shadow-float">Add to itinerary</button>
-            <button className="mt-3 w-full rounded-full border border-border bg-white px-5 py-3 text-sm font-semibold text-foreground">Reserve now</button>
-            <p className="mt-4 text-xs text-muted-foreground">No charge yet — Roamio holds your spot for 24h.</p>
+            <AddToItineraryButton listing={listing} countrySlug={country.slug} service={service} />
+            <Link to="/itinerary" className="mt-3 block w-full rounded-full border border-border bg-white px-5 py-3 text-center text-sm font-semibold text-foreground">View my itineraries</Link>
+            <p className="mt-4 text-xs text-muted-foreground">No charge yet — request a booking when ready.</p>
           </aside>
         </div>
       </main>
