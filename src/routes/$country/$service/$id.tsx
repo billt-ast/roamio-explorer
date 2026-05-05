@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { AddToItineraryButton } from "@/components/AddToItineraryButton";
 import { getCountry, getListing, SERVICE_LABELS, type ServiceSlug } from "@/data/countries";
 import { Star, MapPin } from "lucide-react";
 
