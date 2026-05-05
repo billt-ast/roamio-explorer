@@ -277,7 +277,7 @@ function BookingDialog({
         <button disabled={busy} className="mt-5 w-full rounded-full bg-gradient-brand px-5 py-3 text-sm font-semibold text-white disabled:opacity-60">
           {busy ? "Sending…" : "Send booking request"}
         </button>
-        <style>{`.input{width:100%;border-radius:9999px;border:1px solid hsl(var(--border));background:white;padding:.6rem 1rem;font-size:.875rem;outline:none}.input:focus{border-color:hsl(var(--primary))}textarea.input{border-radius:1rem}`}</style>
+        <style>{`.input{width:100%;border-radius:9999px;border:1px solid var(--border);background:white;padding:.6rem 1rem;font-size:.875rem;outline:none;color:inherit}.input:focus{border-color:var(--primary)}textarea.input{border-radius:1rem}`}</style>
       </form>
     </div>
   );
