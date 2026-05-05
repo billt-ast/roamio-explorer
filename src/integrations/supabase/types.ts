@@ -14,6 +14,62 @@ export type Database = {
   }
   public: {
     Tables: {
+      booking_requests: {
+        Row: {
+          created_at: string
+          email: string
+          end_date: string | null
+          full_name: string
+          id: string
+          itinerary_id: string
+          notes: string | null
+          phone: string | null
+          start_date: string | null
+          status: string
+          travelers: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          end_date?: string | null
+          full_name: string
+          id?: string
+          itinerary_id: string
+          notes?: string | null
+          phone?: string | null
+          start_date?: string | null
+          status?: string
+          travelers?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          end_date?: string | null
+          full_name?: string
+          id?: string
+          itinerary_id?: string
+          notes?: string | null
+          phone?: string | null
+          start_date?: string | null
+          status?: string
+          travelers?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_requests_itinerary_id_fkey"
+            columns: ["itinerary_id"]
+            isOneToOne: false
+            referencedRelation: "itineraries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       countries: {
         Row: {
           created_at: string
@@ -46,6 +102,104 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      itineraries: {
+        Row: {
+          country_slug: string | null
+          created_at: string
+          id: string
+          is_public: boolean
+          share_token: string
+          summary: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          country_slug?: string | null
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          share_token?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          country_slug?: string | null
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          share_token?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      itinerary_items: {
+        Row: {
+          country_slug: string
+          created_at: string
+          end_date: string | null
+          id: string
+          image: string
+          itinerary_id: string
+          listing_id: string | null
+          listing_slug: string
+          location: string
+          notes: string | null
+          position: number
+          price: string
+          service: string
+          start_date: string | null
+          title: string
+        }
+        Insert: {
+          country_slug: string
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          image?: string
+          itinerary_id: string
+          listing_id?: string | null
+          listing_slug: string
+          location?: string
+          notes?: string | null
+          position?: number
+          price?: string
+          service: string
+          start_date?: string | null
+          title: string
+        }
+        Update: {
+          country_slug?: string
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          image?: string
+          itinerary_id?: string
+          listing_id?: string | null
+          listing_slug?: string
+          location?: string
+          notes?: string | null
+          position?: number
+          price?: string
+          service?: string
+          start_date?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_items_itinerary_id_fkey"
+            columns: ["itinerary_id"]
+            isOneToOne: false
+            referencedRelation: "itineraries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       listings: {
         Row: {
