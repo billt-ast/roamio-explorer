@@ -135,7 +135,74 @@ function BookingsPage() {
           here with reference numbers and trip summaries.
         </p>
 
-        <div className="mt-10 space-y-4">
+        {/* Filters */}
+        <div className="mt-8 rounded-3xl bg-card p-4 shadow-soft sm:p-5">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            <label className="relative sm:col-span-2">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search by trip, name, or reference"
+                className="w-full rounded-full border border-border bg-white py-2.5 pl-9 pr-3 text-sm focus:border-primary focus:outline-none"
+              />
+            </label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="rounded-full border border-border bg-white px-4 py-2.5 text-sm capitalize focus:border-primary focus:outline-none"
+            >
+              {STATUS_OPTIONS.map((s) => (
+                <option key={s} value={s}>
+                  {s === "all" ? "All statuses" : s.replace("_", " ")}
+                </option>
+              ))}
+            </select>
+            <select
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              className="rounded-full border border-border bg-white px-4 py-2.5 text-sm capitalize focus:border-primary focus:outline-none"
+            >
+              <option value="all">All destinations</option>
+              {countries.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+            <div className="flex gap-2">
+              <input
+                type="date"
+                value={from}
+                onChange={(e) => setFrom(e.target.value)}
+                className="w-full rounded-full border border-border bg-white px-3 py-2.5 text-sm focus:border-primary focus:outline-none"
+                aria-label="From date"
+              />
+              <input
+                type="date"
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+                className="w-full rounded-full border border-border bg-white px-3 py-2.5 text-sm focus:border-primary focus:outline-none"
+                aria-label="To date"
+              />
+            </div>
+          </div>
+          <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+            <span>
+              Showing {filtered.length} of {bookings.length}
+            </span>
+            {hasFilters && (
+              <button
+                onClick={reset}
+                className="inline-flex items-center gap-1 rounded-full border border-border bg-white px-3 py-1 font-semibold text-foreground hover:bg-muted"
+              >
+                <X className="h-3 w-3" /> Reset
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-8 space-y-4">
           {loading && <p className="text-muted-foreground">Loading…</p>}
           {!loading && bookings.length === 0 && (
             <div className="rounded-3xl border border-dashed border-border p-10 text-center">
@@ -150,10 +217,15 @@ function BookingsPage() {
               </Link>
             </div>
           )}
+          {!loading && bookings.length > 0 && filtered.length === 0 && (
+            <div className="rounded-3xl border border-dashed border-border p-10 text-center text-muted-foreground">
+              No bookings match these filters.
+            </div>
+          )}
 
-          {bookings.map((b) => {
-            const status = b.status || "pending";
-            const badge = statusStyles[status] ?? "bg-muted text-foreground";
+          {filtered.map((b) => {
+            const st = b.status || "pending";
+            const badge = statusStyles[st] ?? "bg-muted text-foreground";
             return (
               <article key={b.id} className="rounded-3xl bg-card p-6 shadow-soft">
                 <header className="flex flex-wrap items-start justify-between gap-3">
