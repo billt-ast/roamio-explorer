@@ -77,6 +77,7 @@ function Index() {
           viewAllHref="/kenya/experiences"
           viewAllLabel="View all experiences"
         />
+        <PerksInfo />
         <Footer />
       </main>
     </div>
