@@ -52,6 +52,8 @@ function BookingsPage() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("all");
   const [country, setCountry] = useState<string>("all");
+  const [countryQuery, setCountryQuery] = useState("");
+  const [countryOpen, setCountryOpen] = useState(false);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
