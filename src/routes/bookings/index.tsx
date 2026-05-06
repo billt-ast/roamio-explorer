@@ -1,10 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Calendar, Mail, Phone, Users, ArrowRight, Hash } from "lucide-react";
+import { Calendar, Mail, Phone, Users, ArrowRight, Hash, Search, X } from "lucide-react";
 
 export const Route = createFileRoute("/bookings/")({
   head: () => ({ meta: [{ title: "My bookings — Roamio" }] }),
@@ -28,6 +28,8 @@ type Booking = {
   updated_at: string;
 };
 
+type ItinMeta = { title: string; country_slug: string | null };
+
 const statusStyles: Record<string, string> = {
   pending: "bg-amber-100 text-amber-800",
   confirmed: "bg-emerald-100 text-emerald-800",
@@ -36,12 +38,21 @@ const statusStyles: Record<string, string> = {
   in_review: "bg-violet-100 text-violet-800",
 };
 
+const STATUS_OPTIONS = ["all", "pending", "in_review", "confirmed", "completed", "cancelled"];
+
 function BookingsPage() {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [titles, setTitles] = useState<Record<string, string>>({});
+  const [itinMeta, setItinMeta] = useState<Record<string, ItinMeta>>({});
   const [loading, setLoading] = useState(true);
+
+  // filters
+  const [q, setQ] = useState("");
+  const [status, setStatus] = useState<string>("all");
+  const [country, setCountry] = useState<string>("all");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
 
   useEffect(() => {
     if (!authLoading && !user) navigate({ to: "/auth" });
@@ -61,15 +72,55 @@ function BookingsPage() {
       if (ids.length) {
         const { data: its } = await supabase
           .from("itineraries")
-          .select("id,title")
+          .select("id,title,country_slug")
           .in("id", ids);
-        const m: Record<string, string> = {};
-        (its ?? []).forEach((i: any) => (m[i.id] = i.title));
-        setTitles(m);
+        const m: Record<string, ItinMeta> = {};
+        (its ?? []).forEach((i: any) => (m[i.id] = { title: i.title, country_slug: i.country_slug }));
+        setItinMeta(m);
       }
       setLoading(false);
     })();
   }, [user]);
+
+  const countries = useMemo(() => {
+    const set = new Set<string>();
+    Object.values(itinMeta).forEach((m) => m.country_slug && set.add(m.country_slug));
+    return [...set].sort();
+  }, [itinMeta]);
+
+  const filtered = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    return bookings.filter((b) => {
+      const meta = itinMeta[b.itinerary_id];
+      if (status !== "all" && (b.status || "pending") !== status) return false;
+      if (country !== "all" && meta?.country_slug !== country) return false;
+      if (from && b.start_date && b.start_date < from) return false;
+      if (to && b.end_date && b.end_date > to) return false;
+      if (from && !b.start_date) return false;
+      if (to && !b.end_date) return false;
+      if (needle) {
+        const hay = `${meta?.title ?? ""} ${b.full_name} ${b.admin_reference ?? ""}`.toLowerCase();
+        if (!hay.includes(needle)) return false;
+      }
+      return true;
+    });
+  }, [bookings, itinMeta, q, status, country, from, to]);
+
+  const titles = useMemo(() => {
+    const t: Record<string, string> = {};
+    Object.entries(itinMeta).forEach(([k, v]) => (t[k] = v.title));
+    return t;
+  }, [itinMeta]);
+
+  const reset = () => {
+    setQ("");
+    setStatus("all");
+    setCountry("all");
+    setFrom("");
+    setTo("");
+  };
+  const hasFilters = q || status !== "all" || country !== "all" || from || to;
+
 
   return (
     <div className="min-h-screen overflow-x-hidden">
