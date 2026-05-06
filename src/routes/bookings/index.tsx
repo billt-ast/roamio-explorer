@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Calendar, Mail, Phone, Users, ArrowRight, Hash, Search, X } from "lucide-react";
+import { Calendar, Mail, Phone, Users, ArrowRight, Hash, Search, X, MapPin } from "lucide-react";
+import { COUNTRIES } from "@/data/countries";
 
 export const Route = createFileRoute("/bookings/")({
   head: () => ({ meta: [{ title: "My bookings — Roamio" }] }),

@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TripBuilderRouteImport } from './routes/trip-builder'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -20,6 +21,11 @@ import { Route as CountryServiceIndexRouteImport } from './routes/$country/$serv
 import { Route as ItineraryShareTokenRouteImport } from './routes/itinerary/share/$token'
 import { Route as CountryServiceIdRouteImport } from './routes/$country/$service/$id'
 
+const TripBuilderRoute = TripBuilderRouteImport.update({
+  id: '/trip-builder',
+  path: '/trip-builder',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/trip-builder': typeof TripBuilderRoute
   '/itinerary/$id': typeof ItineraryIdRoute
   '/$country/': typeof CountryIndexRoute
   '/bookings/': typeof BookingsIndexRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/trip-builder': typeof TripBuilderRoute
   '/itinerary/$id': typeof ItineraryIdRoute
   '/$country': typeof CountryIndexRoute
   '/bookings': typeof BookingsIndexRoute
@@ -100,6 +108,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/trip-builder': typeof TripBuilderRoute
   '/itinerary/$id': typeof ItineraryIdRoute
   '/$country/': typeof CountryIndexRoute
   '/bookings/': typeof BookingsIndexRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/trip-builder'
     | '/itinerary/$id'
     | '/$country/'
     | '/bookings/'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/trip-builder'
     | '/itinerary/$id'
     | '/$country'
     | '/bookings'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/trip-builder'
     | '/itinerary/$id'
     | '/$country/'
     | '/bookings/'
@@ -151,6 +163,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
+  TripBuilderRoute: typeof TripBuilderRoute
   ItineraryIdRoute: typeof ItineraryIdRoute
   CountryIndexRoute: typeof CountryIndexRoute
   BookingsIndexRoute: typeof BookingsIndexRoute
@@ -162,6 +175,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trip-builder': {
+      id: '/trip-builder'
+      path: '/trip-builder'
+      fullPath: '/trip-builder'
+      preLoaderRoute: typeof TripBuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -239,6 +259,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
+  TripBuilderRoute: TripBuilderRoute,
   ItineraryIdRoute: ItineraryIdRoute,
   CountryIndexRoute: CountryIndexRoute,
   BookingsIndexRoute: BookingsIndexRoute,
