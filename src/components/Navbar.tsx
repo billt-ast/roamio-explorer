@@ -162,7 +162,10 @@ export function Navbar() {
               </nav>
 
               <div className="space-y-2 border-t border-border px-6 py-4">
-                <a href="/itinerary" className="block w-full rounded-full bg-gradient-brand py-3 text-center text-sm font-semibold text-white">
+                <a href="/trip-builder" className="block w-full rounded-full bg-gradient-brand py-3 text-center text-sm font-semibold text-white">
+                  ✨ AI Trip Builder
+                </a>
+                <a href="/itinerary" className="block w-full rounded-full border border-border bg-white py-2.5 text-center text-sm font-semibold">
                   Open my itinerary
                 </a>
                 <a href="/bookings" className="block w-full rounded-full border border-border bg-white py-2.5 text-center text-sm font-semibold">
