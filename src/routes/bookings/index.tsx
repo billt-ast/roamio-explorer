@@ -91,6 +91,18 @@ function BookingsPage() {
     return [...set].sort();
   }, [itinMeta]);
 
+  const countryLabel = (slug: string) =>
+    COUNTRIES.find((c) => c.slug === slug)?.name ?? slug;
+
+  const countrySuggestions = useMemo(() => {
+    const needle = countryQuery.trim().toLowerCase();
+    const list = countries.map((slug) => ({ slug, name: countryLabel(slug) }));
+    if (!needle) return list;
+    return list.filter((c) =>
+      c.name.toLowerCase().includes(needle) || c.slug.includes(needle),
+    );
+  }, [countries, countryQuery]);
+
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
     return bookings.filter((b) => {
