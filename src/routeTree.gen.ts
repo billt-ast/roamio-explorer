@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ItineraryIndexRouteImport } from './routes/itinerary/index'
+import { Route as BookingsIndexRouteImport } from './routes/bookings/index'
 import { Route as CountryIndexRouteImport } from './routes/$country/index'
 import { Route as ItineraryIdRouteImport } from './routes/itinerary/$id'
 import { Route as CountryServiceIndexRouteImport } from './routes/$country/$service/index'
@@ -37,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
 const ItineraryIndexRoute = ItineraryIndexRouteImport.update({
   id: '/itinerary/',
   path: '/itinerary/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingsIndexRoute = BookingsIndexRouteImport.update({
+  id: '/bookings/',
+  path: '/bookings/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CountryIndexRoute = CountryIndexRouteImport.update({
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/itinerary/$id': typeof ItineraryIdRoute
   '/$country/': typeof CountryIndexRoute
+  '/bookings/': typeof BookingsIndexRoute
   '/itinerary/': typeof ItineraryIndexRoute
   '/$country/$service/$id': typeof CountryServiceIdRoute
   '/itinerary/share/$token': typeof ItineraryShareTokenRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/itinerary/$id': typeof ItineraryIdRoute
   '/$country': typeof CountryIndexRoute
+  '/bookings': typeof BookingsIndexRoute
   '/itinerary': typeof ItineraryIndexRoute
   '/$country/$service/$id': typeof CountryServiceIdRoute
   '/itinerary/share/$token': typeof ItineraryShareTokenRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/itinerary/$id': typeof ItineraryIdRoute
   '/$country/': typeof CountryIndexRoute
+  '/bookings/': typeof BookingsIndexRoute
   '/itinerary/': typeof ItineraryIndexRoute
   '/$country/$service/$id': typeof CountryServiceIdRoute
   '/itinerary/share/$token': typeof ItineraryShareTokenRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/itinerary/$id'
     | '/$country/'
+    | '/bookings/'
     | '/itinerary/'
     | '/$country/$service/$id'
     | '/itinerary/share/$token'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/itinerary/$id'
     | '/$country'
+    | '/bookings'
     | '/itinerary'
     | '/$country/$service/$id'
     | '/itinerary/share/$token'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/itinerary/$id'
     | '/$country/'
+    | '/bookings/'
     | '/itinerary/'
     | '/$country/$service/$id'
     | '/itinerary/share/$token'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ItineraryIdRoute: typeof ItineraryIdRoute
   CountryIndexRoute: typeof CountryIndexRoute
+  BookingsIndexRoute: typeof BookingsIndexRoute
   ItineraryIndexRoute: typeof ItineraryIndexRoute
   CountryServiceIdRoute: typeof CountryServiceIdRoute
   ItineraryShareTokenRoute: typeof ItineraryShareTokenRoute
@@ -175,6 +188,13 @@ declare module '@tanstack/react-router' {
       path: '/itinerary'
       fullPath: '/itinerary/'
       preLoaderRoute: typeof ItineraryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookings/': {
+      id: '/bookings/'
+      path: '/bookings'
+      fullPath: '/bookings/'
+      preLoaderRoute: typeof BookingsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$country/': {
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ItineraryIdRoute: ItineraryIdRoute,
   CountryIndexRoute: CountryIndexRoute,
+  BookingsIndexRoute: BookingsIndexRoute,
   ItineraryIndexRoute: ItineraryIndexRoute,
   CountryServiceIdRoute: CountryServiceIdRoute,
   ItineraryShareTokenRoute: ItineraryShareTokenRoute,
