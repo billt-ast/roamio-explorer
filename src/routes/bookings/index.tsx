@@ -131,6 +131,7 @@ function BookingsPage() {
     setQ("");
     setStatus("all");
     setCountry("all");
+    setCountryQuery("");
     setFrom("");
     setTo("");
   };
