@@ -1,10 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Calendar, Mail, Phone, Users, ArrowRight, Hash } from "lucide-react";
+import { Calendar, Mail, Phone, Users, ArrowRight, Hash, Search, X } from "lucide-react";
 
 export const Route = createFileRoute("/bookings/")({
   head: () => ({ meta: [{ title: "My bookings — Roamio" }] }),
@@ -28,6 +28,8 @@ type Booking = {
   updated_at: string;
 };
 
+type ItinMeta = { title: string; country_slug: string | null };
+
 const statusStyles: Record<string, string> = {
   pending: "bg-amber-100 text-amber-800",
   confirmed: "bg-emerald-100 text-emerald-800",
@@ -36,12 +38,21 @@ const statusStyles: Record<string, string> = {
   in_review: "bg-violet-100 text-violet-800",
 };
 
+const STATUS_OPTIONS = ["all", "pending", "in_review", "confirmed", "completed", "cancelled"];
+
 function BookingsPage() {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [titles, setTitles] = useState<Record<string, string>>({});
+  const [itinMeta, setItinMeta] = useState<Record<string, ItinMeta>>({});
   const [loading, setLoading] = useState(true);
+
+  // filters
+  const [q, setQ] = useState("");
+  const [status, setStatus] = useState<string>("all");
+  const [country, setCountry] = useState<string>("all");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
 
   useEffect(() => {
     if (!authLoading && !user) navigate({ to: "/auth" });
@@ -61,15 +72,55 @@ function BookingsPage() {
       if (ids.length) {
         const { data: its } = await supabase
           .from("itineraries")
-          .select("id,title")
+          .select("id,title,country_slug")
           .in("id", ids);
-        const m: Record<string, string> = {};
-        (its ?? []).forEach((i: any) => (m[i.id] = i.title));
-        setTitles(m);
+        const m: Record<string, ItinMeta> = {};
+        (its ?? []).forEach((i: any) => (m[i.id] = { title: i.title, country_slug: i.country_slug }));
+        setItinMeta(m);
       }
       setLoading(false);
     })();
   }, [user]);
+
+  const countries = useMemo(() => {
+    const set = new Set<string>();
+    Object.values(itinMeta).forEach((m) => m.country_slug && set.add(m.country_slug));
+    return [...set].sort();
+  }, [itinMeta]);
+
+  const filtered = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    return bookings.filter((b) => {
+      const meta = itinMeta[b.itinerary_id];
+      if (status !== "all" && (b.status || "pending") !== status) return false;
+      if (country !== "all" && meta?.country_slug !== country) return false;
+      if (from && b.start_date && b.start_date < from) return false;
+      if (to && b.end_date && b.end_date > to) return false;
+      if (from && !b.start_date) return false;
+      if (to && !b.end_date) return false;
+      if (needle) {
+        const hay = `${meta?.title ?? ""} ${b.full_name} ${b.admin_reference ?? ""}`.toLowerCase();
+        if (!hay.includes(needle)) return false;
+      }
+      return true;
+    });
+  }, [bookings, itinMeta, q, status, country, from, to]);
+
+  const titles = useMemo(() => {
+    const t: Record<string, string> = {};
+    Object.entries(itinMeta).forEach(([k, v]) => (t[k] = v.title));
+    return t;
+  }, [itinMeta]);
+
+  const reset = () => {
+    setQ("");
+    setStatus("all");
+    setCountry("all");
+    setFrom("");
+    setTo("");
+  };
+  const hasFilters = q || status !== "all" || country !== "all" || from || to;
+
 
   return (
     <div className="min-h-screen overflow-x-hidden">
@@ -84,7 +135,74 @@ function BookingsPage() {
           here with reference numbers and trip summaries.
         </p>
 
-        <div className="mt-10 space-y-4">
+        {/* Filters */}
+        <div className="mt-8 rounded-3xl bg-card p-4 shadow-soft sm:p-5">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            <label className="relative sm:col-span-2">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search by trip, name, or reference"
+                className="w-full rounded-full border border-border bg-white py-2.5 pl-9 pr-3 text-sm focus:border-primary focus:outline-none"
+              />
+            </label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="rounded-full border border-border bg-white px-4 py-2.5 text-sm capitalize focus:border-primary focus:outline-none"
+            >
+              {STATUS_OPTIONS.map((s) => (
+                <option key={s} value={s}>
+                  {s === "all" ? "All statuses" : s.replace("_", " ")}
+                </option>
+              ))}
+            </select>
+            <select
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              className="rounded-full border border-border bg-white px-4 py-2.5 text-sm capitalize focus:border-primary focus:outline-none"
+            >
+              <option value="all">All destinations</option>
+              {countries.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+            <div className="flex gap-2">
+              <input
+                type="date"
+                value={from}
+                onChange={(e) => setFrom(e.target.value)}
+                className="w-full rounded-full border border-border bg-white px-3 py-2.5 text-sm focus:border-primary focus:outline-none"
+                aria-label="From date"
+              />
+              <input
+                type="date"
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+                className="w-full rounded-full border border-border bg-white px-3 py-2.5 text-sm focus:border-primary focus:outline-none"
+                aria-label="To date"
+              />
+            </div>
+          </div>
+          <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+            <span>
+              Showing {filtered.length} of {bookings.length}
+            </span>
+            {hasFilters && (
+              <button
+                onClick={reset}
+                className="inline-flex items-center gap-1 rounded-full border border-border bg-white px-3 py-1 font-semibold text-foreground hover:bg-muted"
+              >
+                <X className="h-3 w-3" /> Reset
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-8 space-y-4">
           {loading && <p className="text-muted-foreground">Loading…</p>}
           {!loading && bookings.length === 0 && (
             <div className="rounded-3xl border border-dashed border-border p-10 text-center">
@@ -99,10 +217,15 @@ function BookingsPage() {
               </Link>
             </div>
           )}
+          {!loading && bookings.length > 0 && filtered.length === 0 && (
+            <div className="rounded-3xl border border-dashed border-border p-10 text-center text-muted-foreground">
+              No bookings match these filters.
+            </div>
+          )}
 
-          {bookings.map((b) => {
-            const status = b.status || "pending";
-            const badge = statusStyles[status] ?? "bg-muted text-foreground";
+          {filtered.map((b) => {
+            const st = b.status || "pending";
+            const badge = statusStyles[st] ?? "bg-muted text-foreground";
             return (
               <article key={b.id} className="rounded-3xl bg-card p-6 shadow-soft">
                 <header className="flex flex-wrap items-start justify-between gap-3">
@@ -117,7 +240,7 @@ function BookingsPage() {
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${badge}`}
                   >
-                    {status.replace("_", " ")}
+                    {st.replace("_", " ")}
                   </span>
                 </header>
 

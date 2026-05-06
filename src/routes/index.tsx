@@ -5,6 +5,7 @@ import { CategoryRow } from "@/components/CategoryRow";
 import { JourneyStrip } from "@/components/JourneyStrip";
 import { CountryHighlights } from "@/components/CountryHighlights";
 import { Footer } from "@/components/Footer";
+import { PerksInfo } from "@/components/PerksInfo";
 
 import stayCozy from "@/assets/stay-cozy-livingroom.jpg";
 import stayLoft from "@/assets/stay-aesthetic-loft.jpg";
@@ -76,6 +77,7 @@ function Index() {
           viewAllHref="/kenya/experiences"
           viewAllLabel="View all experiences"
         />
+        <PerksInfo />
         <Footer />
       </main>
     </div>
