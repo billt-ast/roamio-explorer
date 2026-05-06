@@ -16,6 +16,8 @@ export type Database = {
     Tables: {
       booking_requests: {
         Row: {
+          admin_reference: string | null
+          admin_summary: string | null
           created_at: string
           email: string
           end_date: string | null
@@ -31,6 +33,8 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          admin_reference?: string | null
+          admin_summary?: string | null
           created_at?: string
           email: string
           end_date?: string | null
@@ -46,6 +50,8 @@ export type Database = {
           user_id: string
         }
         Update: {
+          admin_reference?: string | null
+          admin_summary?: string | null
           created_at?: string
           email?: string
           end_date?: string | null
