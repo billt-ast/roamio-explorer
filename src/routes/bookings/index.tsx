@@ -174,18 +174,56 @@ function BookingsPage() {
                 </option>
               ))}
             </select>
-            <select
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              className="rounded-full border border-border bg-white px-4 py-2.5 text-sm capitalize focus:border-primary focus:outline-none"
-            >
-              <option value="all">All destinations</option>
-              {countries.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                value={country === "all" ? countryQuery : countryLabel(country)}
+                onChange={(e) => {
+                  setCountry("all");
+                  setCountryQuery(e.target.value);
+                  setCountryOpen(true);
+                }}
+                onFocus={() => setCountryOpen(true)}
+                onBlur={() => setTimeout(() => setCountryOpen(false), 150)}
+                placeholder="All destinations"
+                className="w-full rounded-full border border-border bg-white py-2.5 pl-9 pr-8 text-sm capitalize focus:border-primary focus:outline-none"
+              />
+              {(country !== "all" || countryQuery) && (
+                <button
+                  type="button"
+                  onClick={() => { setCountry("all"); setCountryQuery(""); }}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:bg-muted"
+                  aria-label="Clear destination"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+              {countryOpen && countrySuggestions.length > 0 && (
+                <ul className="absolute left-0 right-0 top-full z-20 mt-1 max-h-64 overflow-auto rounded-2xl border border-border bg-white shadow-float">
+                  {countrySuggestions.map((c) => (
+                    <li key={c.slug}>
+                      <button
+                        type="button"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          setCountry(c.slug);
+                          setCountryQuery("");
+                          setCountryOpen(false);
+                        }}
+                        className="block w-full px-4 py-2 text-left text-sm capitalize hover:bg-muted"
+                      >
+                        {c.name}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {countryOpen && countrySuggestions.length === 0 && (
+                <div className="absolute left-0 right-0 top-full z-20 mt-1 rounded-2xl border border-border bg-white px-4 py-3 text-sm text-muted-foreground shadow-float">
+                  No matching destinations
+                </div>
+              )}
+            </div>
             <div className="flex gap-2">
               <input
                 type="date"
