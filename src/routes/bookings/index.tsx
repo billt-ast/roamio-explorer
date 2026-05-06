@@ -240,7 +240,7 @@ function BookingsPage() {
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${badge}`}
                   >
-                    {status.replace("_", " ")}
+                    {st.replace("_", " ")}
                   </span>
                 </header>
 
