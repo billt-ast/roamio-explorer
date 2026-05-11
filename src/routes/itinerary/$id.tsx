@@ -294,6 +294,44 @@ function BookingDialog({
           </Field>
         </div>
 
+        <div className="mt-5 rounded-2xl border border-border bg-muted/30 p-4">
+          <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <span>Pricing summary</span>
+            {membership ? (
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] text-primary normal-case">
+                {membership.tier_name} · {membership.stay_discount_pct}% stays · {membership.transport_discount_pct}% transport
+              </span>
+            ) : (
+              <span className="text-[10px] normal-case">Sign in for member discounts</span>
+            )}
+          </div>
+          <dl className="mt-3 space-y-1.5 text-sm">
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">Subtotal</dt>
+              <dd>{formatPrice(totals.subtotal)}</dd>
+            </div>
+            {totals.stayDiscount > 0 && (
+              <div className="flex justify-between text-emerald-600">
+                <dt>Stay discount</dt>
+                <dd>−{formatPrice(totals.stayDiscount)}</dd>
+              </div>
+            )}
+            {totals.transportDiscount > 0 && (
+              <div className="flex justify-between text-emerald-600">
+                <dt>Transport discount</dt>
+                <dd>−{formatPrice(totals.transportDiscount)}</dd>
+              </div>
+            )}
+            <div className="flex justify-between border-t border-border pt-2 text-base font-semibold">
+              <dt>Estimated total</dt>
+              <dd>{formatPrice(totals.total)}</dd>
+            </div>
+          </dl>
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Final pricing is confirmed by your concierge before any charge.
+          </p>
+        </div>
+
         <button disabled={busy} className="mt-5 w-full rounded-full bg-gradient-brand px-5 py-3 text-sm font-semibold text-white disabled:opacity-60">
           {busy ? "Sending…" : "Send booking request"}
         </button>
