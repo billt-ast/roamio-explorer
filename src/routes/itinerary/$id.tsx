@@ -17,6 +17,8 @@ import {
   Loader2,
 } from "lucide-react";
 import type { Itinerary, ItineraryItem } from "@/hooks/useItinerary";
+import { useMembership } from "@/hooks/useMembership";
+import { computeItineraryTotals, formatPrice } from "@/lib/pricing";
 
 export const Route = createFileRoute("/itinerary/$id")({
   head: () => ({ meta: [{ title: "Itinerary — Roamio" }] }),
@@ -183,6 +185,7 @@ function ItineraryDetailPage() {
             itineraryId={itinerary.id}
             userId={user.id}
             defaultEmail={user.email ?? ""}
+            items={items}
             onClose={() => setShowBooking(false)}
           />
         )}
@@ -196,13 +199,16 @@ function BookingDialog({
   itineraryId,
   userId,
   defaultEmail,
+  items,
   onClose,
 }: {
   itineraryId: string;
   userId: string;
   defaultEmail: string;
+  items: ItineraryItem[];
   onClose: () => void;
 }) {
+  const { membership } = useMembership();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState(defaultEmail);
   const [phone, setPhone] = useState("");
@@ -212,6 +218,8 @@ function BookingDialog({
   const [notes, setNotes] = useState("");
   const [busy, setBusy] = useState(false);
 
+  const totals = computeItineraryTotals(items, membership);
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim() || !email.trim()) {
@@ -219,6 +227,18 @@ function BookingDialog({
       return;
     }
     setBusy(true);
+    const tierLine = membership
+      ? `Tier: ${membership.tier_name} (stays ${membership.stay_discount_pct}% off, transport ${membership.transport_discount_pct}% off)`
+      : "Tier: none";
+    const pricingSummary = [
+      `--- Pricing summary ---`,
+      tierLine,
+      `Subtotal: ${formatPrice(totals.subtotal)}`,
+      `Member discount: -${formatPrice(totals.totalDiscount)}`,
+      `Estimated total: ${formatPrice(totals.total)}`,
+    ].join("\n");
+    const combinedNotes = [notes.trim(), pricingSummary].filter(Boolean).join("\n\n");
+
     const { error } = await supabase.from("booking_requests").insert({
       user_id: userId,
       itinerary_id: itineraryId,
@@ -228,7 +248,7 @@ function BookingDialog({
       travelers,
       start_date: startDate || null,
       end_date: endDate || null,
-      notes: notes.trim(),
+      notes: combinedNotes,
     });
     setBusy(false);
     if (error) {
@@ -272,6 +292,44 @@ function BookingDialog({
           <Field label="Notes" full>
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={1000} rows={3} className="input resize-none" />
           </Field>
+        </div>
+
+        <div className="mt-5 rounded-2xl border border-border bg-muted/30 p-4">
+          <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <span>Pricing summary</span>
+            {membership ? (
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] text-primary normal-case">
+                {membership.tier_name} · {membership.stay_discount_pct}% stays · {membership.transport_discount_pct}% transport
+              </span>
+            ) : (
+              <span className="text-[10px] normal-case">Sign in for member discounts</span>
+            )}
+          </div>
+          <dl className="mt-3 space-y-1.5 text-sm">
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">Subtotal</dt>
+              <dd>{formatPrice(totals.subtotal)}</dd>
+            </div>
+            {totals.stayDiscount > 0 && (
+              <div className="flex justify-between text-emerald-600">
+                <dt>Stay discount</dt>
+                <dd>−{formatPrice(totals.stayDiscount)}</dd>
+              </div>
+            )}
+            {totals.transportDiscount > 0 && (
+              <div className="flex justify-between text-emerald-600">
+                <dt>Transport discount</dt>
+                <dd>−{formatPrice(totals.transportDiscount)}</dd>
+              </div>
+            )}
+            <div className="flex justify-between border-t border-border pt-2 text-base font-semibold">
+              <dt>Estimated total</dt>
+              <dd>{formatPrice(totals.total)}</dd>
+            </div>
+          </dl>
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Final pricing is confirmed by your concierge before any charge.
+          </p>
         </div>
 
         <button disabled={busy} className="mt-5 w-full rounded-full bg-gradient-brand px-5 py-3 text-sm font-semibold text-white disabled:opacity-60">

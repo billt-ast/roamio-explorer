@@ -3,7 +3,9 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { AddToItineraryButton } from "@/components/AddToItineraryButton";
 import { getCountry, getListing, SERVICE_LABELS, type ServiceSlug } from "@/data/countries";
-import { Star, MapPin } from "lucide-react";
+import { Star, MapPin, Sparkles } from "lucide-react";
+import { useMembership } from "@/hooks/useMembership";
+import { discountPctFor, parsePrice, formatPrice } from "@/lib/pricing";
 
 const SERVICES: ServiceSlug[] = ["stays", "experiences", "flights", "attractions", "food", "transport"];
 
@@ -38,6 +40,10 @@ function ListingDetail() {
   const country = data.country;
   const service = data.service as ServiceSlug;
   const listing = data.listing;
+  const { membership } = useMembership();
+  const pct = discountPctFor(service, membership);
+  const base = parsePrice(listing.price);
+  const memberPrice = pct > 0 ? base - (base * pct) / 100 : base;
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Navbar />
@@ -73,13 +79,33 @@ function ListingDetail() {
           </div>
 
           <aside className="h-fit rounded-3xl bg-card p-6 shadow-float lg:sticky lg:top-24">
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-semibold text-primary">{listing.price}</span>
-              {listing.priceUnit && <span className="text-sm text-muted-foreground">{listing.priceUnit}</span>}
-            </div>
+            {pct > 0 ? (
+              <>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-semibold text-primary">{formatPrice(memberPrice)}</span>
+                  {listing.priceUnit && <span className="text-sm text-muted-foreground">{listing.priceUnit}</span>}
+                </div>
+                <div className="mt-1 flex items-center gap-2 text-xs">
+                  <span className="text-muted-foreground line-through">{listing.price}</span>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 font-semibold text-emerald-600">
+                    <Sparkles className="h-3 w-3" /> {pct}% {membership?.tier_name} member price
+                  </span>
+                </div>
+              </>
+            ) : (
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-semibold text-primary">{listing.price}</span>
+                {listing.priceUnit && <span className="text-sm text-muted-foreground">{listing.priceUnit}</span>}
+              </div>
+            )}
             <AddToItineraryButton listing={listing} countrySlug={country.slug} service={service} />
             <Link to="/itinerary" className="mt-3 block w-full rounded-full border border-border bg-white px-5 py-3 text-center text-sm font-semibold text-foreground">View my itineraries</Link>
             <p className="mt-4 text-xs text-muted-foreground">No charge yet — request a booking when ready.</p>
+            {!membership && (
+              <Link to="/rewards" className="mt-2 block text-center text-xs font-semibold text-primary hover:underline">
+                Join Roamio Rewards to unlock member pricing →
+              </Link>
+            )}
           </aside>
         </div>
       </main>
