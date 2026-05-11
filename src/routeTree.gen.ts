@@ -13,6 +13,7 @@ import { Route as TripBuilderRouteImport } from './routes/trip-builder'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RewardsIndexRouteImport } from './routes/rewards/index'
 import { Route as ItineraryIndexRouteImport } from './routes/itinerary/index'
 import { Route as BookingsIndexRouteImport } from './routes/bookings/index'
 import { Route as CountryIndexRouteImport } from './routes/$country/index'
@@ -39,6 +40,11 @@ const AdminRoute = AdminRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RewardsIndexRoute = RewardsIndexRouteImport.update({
+  id: '/rewards/',
+  path: '/rewards/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ItineraryIndexRoute = ItineraryIndexRouteImport.update({
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/$country/': typeof CountryIndexRoute
   '/bookings/': typeof BookingsIndexRoute
   '/itinerary/': typeof ItineraryIndexRoute
+  '/rewards/': typeof RewardsIndexRoute
   '/$country/$service/$id': typeof CountryServiceIdRoute
   '/itinerary/share/$token': typeof ItineraryShareTokenRoute
   '/$country/$service/': typeof CountryServiceIndexRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/$country': typeof CountryIndexRoute
   '/bookings': typeof BookingsIndexRoute
   '/itinerary': typeof ItineraryIndexRoute
+  '/rewards': typeof RewardsIndexRoute
   '/$country/$service/$id': typeof CountryServiceIdRoute
   '/itinerary/share/$token': typeof ItineraryShareTokenRoute
   '/$country/$service': typeof CountryServiceIndexRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/$country/': typeof CountryIndexRoute
   '/bookings/': typeof BookingsIndexRoute
   '/itinerary/': typeof ItineraryIndexRoute
+  '/rewards/': typeof RewardsIndexRoute
   '/$country/$service/$id': typeof CountryServiceIdRoute
   '/itinerary/share/$token': typeof ItineraryShareTokenRoute
   '/$country/$service/': typeof CountryServiceIndexRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/$country/'
     | '/bookings/'
     | '/itinerary/'
+    | '/rewards/'
     | '/$country/$service/$id'
     | '/itinerary/share/$token'
     | '/$country/$service/'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/$country'
     | '/bookings'
     | '/itinerary'
+    | '/rewards'
     | '/$country/$service/$id'
     | '/itinerary/share/$token'
     | '/$country/$service'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/$country/'
     | '/bookings/'
     | '/itinerary/'
+    | '/rewards/'
     | '/$country/$service/$id'
     | '/itinerary/share/$token'
     | '/$country/$service/'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   CountryIndexRoute: typeof CountryIndexRoute
   BookingsIndexRoute: typeof BookingsIndexRoute
   ItineraryIndexRoute: typeof ItineraryIndexRoute
+  RewardsIndexRoute: typeof RewardsIndexRoute
   CountryServiceIdRoute: typeof CountryServiceIdRoute
   ItineraryShareTokenRoute: typeof ItineraryShareTokenRoute
   CountryServiceIndexRoute: typeof CountryServiceIndexRoute
@@ -201,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rewards/': {
+      id: '/rewards/'
+      path: '/rewards'
+      fullPath: '/rewards/'
+      preLoaderRoute: typeof RewardsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/itinerary/': {
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   CountryIndexRoute: CountryIndexRoute,
   BookingsIndexRoute: BookingsIndexRoute,
   ItineraryIndexRoute: ItineraryIndexRoute,
+  RewardsIndexRoute: RewardsIndexRoute,
   CountryServiceIdRoute: CountryServiceIdRoute,
   ItineraryShareTokenRoute: ItineraryShareTokenRoute,
   CountryServiceIndexRoute: CountryServiceIndexRoute,
@@ -271,3 +292,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
