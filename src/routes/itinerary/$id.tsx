@@ -17,6 +17,8 @@ import {
   Loader2,
 } from "lucide-react";
 import type { Itinerary, ItineraryItem } from "@/hooks/useItinerary";
+import { useMembership } from "@/hooks/useMembership";
+import { computeItineraryTotals, formatPrice } from "@/lib/pricing";
 
 export const Route = createFileRoute("/itinerary/$id")({
   head: () => ({ meta: [{ title: "Itinerary — Roamio" }] }),
@@ -183,6 +185,7 @@ function ItineraryDetailPage() {
             itineraryId={itinerary.id}
             userId={user.id}
             defaultEmail={user.email ?? ""}
+            items={items}
             onClose={() => setShowBooking(false)}
           />
         )}
@@ -196,13 +199,16 @@ function BookingDialog({
   itineraryId,
   userId,
   defaultEmail,
+  items,
   onClose,
 }: {
   itineraryId: string;
   userId: string;
   defaultEmail: string;
+  items: ItineraryItem[];
   onClose: () => void;
 }) {
+  const { membership } = useMembership();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState(defaultEmail);
   const [phone, setPhone] = useState("");
@@ -212,6 +218,8 @@ function BookingDialog({
   const [notes, setNotes] = useState("");
   const [busy, setBusy] = useState(false);
 
+  const totals = computeItineraryTotals(items, membership);
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim() || !email.trim()) {
@@ -219,6 +227,18 @@ function BookingDialog({
       return;
     }
     setBusy(true);
+    const tierLine = membership
+      ? `Tier: ${membership.tier_name} (stays ${membership.stay_discount_pct}% off, transport ${membership.transport_discount_pct}% off)`
+      : "Tier: none";
+    const pricingSummary = [
+      `--- Pricing summary ---`,
+      tierLine,
+      `Subtotal: ${formatPrice(totals.subtotal)}`,
+      `Member discount: -${formatPrice(totals.totalDiscount)}`,
+      `Estimated total: ${formatPrice(totals.total)}`,
+    ].join("\n");
+    const combinedNotes = [notes.trim(), pricingSummary].filter(Boolean).join("\n\n");
+
     const { error } = await supabase.from("booking_requests").insert({
       user_id: userId,
       itinerary_id: itineraryId,
@@ -228,7 +248,7 @@ function BookingDialog({
       travelers,
       start_date: startDate || null,
       end_date: endDate || null,
-      notes: notes.trim(),
+      notes: combinedNotes,
     });
     setBusy(false);
     if (error) {
