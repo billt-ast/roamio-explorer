@@ -171,6 +171,9 @@ export function Navbar() {
                 <a href="/bookings" className="block w-full rounded-full border border-border bg-white py-2.5 text-center text-sm font-semibold">
                   My bookings
                 </a>
+                <a href="/rewards" className="block w-full rounded-full border border-border bg-white py-2.5 text-center text-sm font-semibold">
+                  ⭐ Rewards
+                </a>
                 <div className="flex gap-2">
                   <a href="/auth" className="flex-1 rounded-full border border-border bg-white py-2.5 text-center text-xs font-semibold">Sign in</a>
                   <a href="/admin" className="flex-1 rounded-full border border-border bg-white py-2.5 text-center text-xs font-semibold">Admin</a>

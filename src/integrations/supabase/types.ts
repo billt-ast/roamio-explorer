@@ -266,6 +266,51 @@ export type Database = {
           },
         ]
       }
+      membership_tiers: {
+        Row: {
+          color: string
+          created_at: string
+          description: string
+          id: string
+          level: number
+          min_bookings: number
+          name: string
+          perks: Json
+          slug: string
+          stay_discount_pct: number
+          transport_discount_pct: number
+          updated_at: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          description?: string
+          id?: string
+          level: number
+          min_bookings?: number
+          name: string
+          perks?: Json
+          slug: string
+          stay_discount_pct?: number
+          transport_discount_pct?: number
+          updated_at?: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          description?: string
+          id?: string
+          level?: number
+          min_bookings?: number
+          name?: string
+          perks?: Json
+          slug?: string
+          stay_discount_pct?: number
+          transport_discount_pct?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -283,6 +328,41 @@ export type Database = {
           id?: string
         }
         Relationships: []
+      }
+      user_memberships: {
+        Row: {
+          bookings_count: number
+          created_at: string
+          points: number
+          tier_slug: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bookings_count?: number
+          created_at?: string
+          points?: number
+          tier_slug?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bookings_count?: number
+          created_at?: string
+          points?: number
+          tier_slug?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_memberships_tier_slug_fkey"
+            columns: ["tier_slug"]
+            isOneToOne: false
+            referencedRelation: "membership_tiers"
+            referencedColumns: ["slug"]
+          },
+        ]
       }
       user_roles: {
         Row: {

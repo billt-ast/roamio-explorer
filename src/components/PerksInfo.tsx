@@ -10,7 +10,7 @@ export function PerksInfo() {
           </div>
           <h2 className="mt-1 text-3xl font-medium sm:text-4xl">Travel more, spend less.</h2>
         </div>
-        <a href="/auth" className="text-sm font-semibold text-primary hover:underline">
+        <a href="/rewards" className="text-sm font-semibold text-primary hover:underline">
           Learn more about your rewards →
         </a>
       </div>
