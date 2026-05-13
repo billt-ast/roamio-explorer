@@ -30,7 +30,7 @@ export const Route = createFileRoute("/sitemap.xml")({
             entries.push({ path: `/${country.slug}/${service}`, changefreq: "weekly", priority: "0.7" });
             for (const listing of items) {
               entries.push({
-                path: `/${country.slug}/${service}/${listing.slug}`,
+                path: `/${country.slug}/${service}/${listing.id}`,
                 changefreq: "monthly",
                 priority: "0.6",
               });
