@@ -11,7 +11,7 @@ export const Route = createFileRoute("/$country/")({
     if (!country) throw notFound();
     return { country };
   },
-  head: ({ loaderData }) => ({
+  head: ({ loaderData, params }) => ({
     meta: loaderData
       ? [
           { title: `${loaderData.country.name} — Roamio` },
@@ -19,8 +19,10 @@ export const Route = createFileRoute("/$country/")({
           { property: "og:title", content: `${loaderData.country.name} — Roamio` },
           { property: "og:description", content: loaderData.country.tagline },
           { property: "og:image", content: loaderData.country.hero },
+          { property: "og:url", content: `https://roamio-explorer.lovable.app/${params.country}` },
         ]
       : [],
+    links: [{ rel: "canonical", href: `https://roamio-explorer.lovable.app/${params.country}` }],
   }),
   notFoundComponent: () => (
     <div className="flex min-h-screen items-center justify-center">
