@@ -1,0 +1,20 @@
+# Roamio
+
+> The fluid travel OS for exploring Kenya and beyond — stays, safaris, flights, food, transport and experiences orchestrated into one journey.
+
+Roamio lets travellers discover curated listings by country and service, build saveable itineraries, request bookings, plan complete trips with an AI trip builder, and earn membership perks via Roamio Rewards.
+
+## Pages
+
+- [Home](/): Landing page with featured stays, experiences and destinations.
+- [AI Trip Builder](/trip-builder): Generate a complete day-by-day trip with flights, stays, transport and experiences.
+- [Roamio Rewards](/rewards): Membership tiers with stay and transport discounts and concierge perks.
+- [Kenya](/kenya): Country hub with stays, experiences, flights, attractions, food and transport.
+
+## Optional
+
+- [Italy](/italy)
+- [Croatia](/croatia)
+- [Montenegro](/montenegro)
+- [Egypt](/egypt)
+- [Japan](/japan)

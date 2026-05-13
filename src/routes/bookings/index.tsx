@@ -8,7 +8,17 @@ import { Calendar, Mail, Phone, Users, ArrowRight, Hash, Search, X, MapPin } fro
 import { COUNTRIES } from "@/data/countries";
 
 export const Route = createFileRoute("/bookings/")({
-  head: () => ({ meta: [{ title: "My bookings — Roamio" }] }),
+  head: () => ({
+    meta: [
+      { title: "My bookings — Roamio" },
+      { name: "description", content: "Track your Roamio booking requests, status changes and admin references in one place." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "My bookings — Roamio" },
+      { property: "og:description", content: "Manage your Roamio booking requests." },
+      { property: "og:url", content: "https://roamio-explorer.lovable.app/bookings" },
+    ],
+    links: [{ rel: "canonical", href: "https://roamio-explorer.lovable.app/bookings" }],
+  }),
   component: BookingsPage,
 });
 

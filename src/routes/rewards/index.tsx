@@ -16,7 +16,11 @@ export const Route = createFileRoute("/rewards/")({
         content:
           "Roamio Rewards is our membership program. Unlock stay & transport discounts, upgrades and concierge perks as you travel.",
       },
+      { property: "og:title", content: "Roamio Rewards — Earn perks every trip" },
+      { property: "og:description", content: "Stay and transport discounts, upgrades and concierge perks for Roamio members." },
+      { property: "og:url", content: "https://roamio-explorer.lovable.app/rewards" },
     ],
+    links: [{ rel: "canonical", href: "https://roamio-explorer.lovable.app/rewards" }],
   }),
 });
 

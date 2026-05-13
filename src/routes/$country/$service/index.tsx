@@ -14,13 +14,17 @@ export const Route = createFileRoute("/$country/$service/")({
     if (!SERVICES.includes(service)) throw notFound();
     return { country, service, items: country.services[service] ?? [] };
   },
-  head: ({ loaderData }) => ({
+  head: ({ loaderData, params }) => ({
     meta: loaderData
       ? [
           { title: `${SERVICE_LABELS[loaderData.service]} in ${loaderData.country.name} — Roamio` },
           { name: "description", content: `${SERVICE_LABELS[loaderData.service]} across ${loaderData.country.name}, curated by Roamio.` },
+          { property: "og:title", content: `${SERVICE_LABELS[loaderData.service]} in ${loaderData.country.name} — Roamio` },
+          { property: "og:description", content: `Discover ${SERVICE_LABELS[loaderData.service].toLowerCase()} in ${loaderData.country.name}, curated by Roamio.` },
+          { property: "og:url", content: `https://roamio-explorer.lovable.app/${params.country}/${params.service}` },
         ]
       : [],
+    links: [{ rel: "canonical", href: `https://roamio-explorer.lovable.app/${params.country}/${params.service}` }],
   }),
   notFoundComponent: () => <div className="p-12 text-center">Not found.</div>,
   errorComponent: ({ error }) => <div className="p-12 text-center">{error.message}</div>,

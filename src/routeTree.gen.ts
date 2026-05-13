@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TripBuilderRouteImport } from './routes/trip-builder'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -25,6 +26,11 @@ import { Route as CountryServiceIdRouteImport } from './routes/$country/$service
 const TripBuilderRoute = TripBuilderRouteImport.update({
   id: '/trip-builder',
   path: '/trip-builder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/trip-builder': typeof TripBuilderRoute
   '/itinerary/$id': typeof ItineraryIdRoute
   '/$country/': typeof CountryIndexRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/trip-builder': typeof TripBuilderRoute
   '/itinerary/$id': typeof ItineraryIdRoute
   '/$country': typeof CountryIndexRoute
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/trip-builder': typeof TripBuilderRoute
   '/itinerary/$id': typeof ItineraryIdRoute
   '/$country/': typeof CountryIndexRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/sitemap.xml'
     | '/trip-builder'
     | '/itinerary/$id'
     | '/$country/'
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/sitemap.xml'
     | '/trip-builder'
     | '/itinerary/$id'
     | '/$country'
@@ -160,6 +171,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/sitemap.xml'
     | '/trip-builder'
     | '/itinerary/$id'
     | '/$country/'
@@ -175,6 +187,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TripBuilderRoute: typeof TripBuilderRoute
   ItineraryIdRoute: typeof ItineraryIdRoute
   CountryIndexRoute: typeof CountryIndexRoute
@@ -193,6 +206,13 @@ declare module '@tanstack/react-router' {
       path: '/trip-builder'
       fullPath: '/trip-builder'
       preLoaderRoute: typeof TripBuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -279,6 +299,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TripBuilderRoute: TripBuilderRoute,
   ItineraryIdRoute: ItineraryIdRoute,
   CountryIndexRoute: CountryIndexRoute,

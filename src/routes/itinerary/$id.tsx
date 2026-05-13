@@ -21,7 +21,13 @@ import { useMembership } from "@/hooks/useMembership";
 import { computeItineraryTotals, formatPrice } from "@/lib/pricing";
 
 export const Route = createFileRoute("/itinerary/$id")({
-  head: () => ({ meta: [{ title: "Itinerary — Roamio" }] }),
+  head: () => ({
+    meta: [
+      { title: "Itinerary — Roamio" },
+      { name: "description", content: "View and edit a saved Roamio itinerary, then send it as a booking request." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: ItineraryDetailPage,
 });
 

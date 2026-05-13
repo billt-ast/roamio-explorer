@@ -19,7 +19,7 @@ export const Route = createFileRoute("/$country/$service/$id")({
     if (!listing) throw notFound();
     return { country, service, listing };
   },
-  head: ({ loaderData }) => ({
+  head: ({ loaderData, params }) => ({
     meta: loaderData
       ? [
           { title: `${loaderData.listing.title} — ${loaderData.country.name} | Roamio` },
@@ -27,7 +27,11 @@ export const Route = createFileRoute("/$country/$service/$id")({
           { property: "og:title", content: loaderData.listing.title },
           { property: "og:description", content: loaderData.listing.description },
           { property: "og:image", content: loaderData.listing.image },
+          { property: "og:url", content: `https://roamio-explorer.lovable.app/${params.country}/${params.service}/${params.id}` },
         ]
+      : [],
+    links: loaderData
+      ? [{ rel: "canonical", href: `https://roamio-explorer.lovable.app/${params.country}/${params.service}/${params.id}` }]
       : [],
   }),
   notFoundComponent: () => <div className="p-12 text-center">Listing not found.</div>,
