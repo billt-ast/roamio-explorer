@@ -5,7 +5,17 @@ import { Navbar } from "@/components/Navbar";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — Roamio" }] }),
+  head: () => ({
+    meta: [
+      { title: "Sign in — Roamio" },
+      { name: "description", content: "Sign in or create your Roamio account to save itineraries, request bookings and unlock member pricing." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Sign in — Roamio" },
+      { property: "og:description", content: "Access your Roamio account to plan and book trips." },
+      { property: "og:url", content: "https://roamio-explorer.lovable.app/auth" },
+    ],
+    links: [{ rel: "canonical", href: "https://roamio-explorer.lovable.app/auth" }],
+  }),
   component: AuthPage,
 });
 

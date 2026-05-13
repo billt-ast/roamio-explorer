@@ -35,7 +35,9 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "The fluid travel OS for Kenya. Plan, book and live the journey.",
       },
+      { property: "og:url", content: "https://roamio-explorer.lovable.app/" },
     ],
+    links: [{ rel: "canonical", href: "https://roamio-explorer.lovable.app/" }],
   }),
 });
 

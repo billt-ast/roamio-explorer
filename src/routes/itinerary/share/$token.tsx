@@ -7,7 +7,14 @@ import { MapPin, Loader2 } from "lucide-react";
 import type { Itinerary, ItineraryItem } from "@/hooks/useItinerary";
 
 export const Route = createFileRoute("/itinerary/share/$token")({
-  head: () => ({ meta: [{ title: "Shared itinerary — Roamio" }] }),
+  head: () => ({
+    meta: [
+      { title: "Shared itinerary — Roamio" },
+      { name: "description", content: "A Roamio itinerary shared with you — stays, experiences and transport curated into one trip." },
+      { property: "og:title", content: "Shared itinerary — Roamio" },
+      { property: "og:description", content: "View this Roamio trip plan." },
+    ],
+  }),
   component: SharePage,
 });
 

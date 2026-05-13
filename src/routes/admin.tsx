@@ -6,7 +6,14 @@ import { Navbar } from "@/components/Navbar";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin")({
-  head: () => ({ meta: [{ title: "Admin — Roamio" }] }),
+  head: () => ({
+    meta: [
+      { title: "Admin — Roamio" },
+      { name: "description", content: "Internal Roamio admin console for managing countries and listings." },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+    links: [{ rel: "canonical", href: "https://roamio-explorer.lovable.app/admin" }],
+  }),
   component: AdminPage,
 });
 

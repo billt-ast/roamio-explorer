@@ -15,8 +15,12 @@ export const Route = createFileRoute("/trip-builder")({
   head: () => ({
     meta: [
       { title: "AI Trip Builder — Roamio" },
-      { name: "description", content: "Plan a complete trip with flights, stays, transport, and experiences in seconds with Roamio's AI trip builder." },
+      { name: "description", content: "Plan a complete trip with flights, stays, transport and experiences in seconds with Roamio's AI trip builder." },
+      { property: "og:title", content: "AI Trip Builder — Roamio" },
+      { property: "og:description", content: "Generate a day-by-day trip with flights, stays, transport and experiences in seconds." },
+      { property: "og:url", content: "https://roamio-explorer.lovable.app/trip-builder" },
     ],
+    links: [{ rel: "canonical", href: "https://roamio-explorer.lovable.app/trip-builder" }],
   }),
   component: TripBuilderPage,
 });

@@ -9,7 +9,17 @@ import { toast } from "sonner";
 import { Plus, MapPin, Trash2, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/itinerary/")({
-  head: () => ({ meta: [{ title: "My itineraries — Roamio" }] }),
+  head: () => ({
+    meta: [
+      { title: "My itineraries — Roamio" },
+      { name: "description", content: "Build, save and manage your Roamio itineraries — stays, experiences, flights and transport in one plan." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "My itineraries — Roamio" },
+      { property: "og:description", content: "Your saved Roamio trip plans." },
+      { property: "og:url", content: "https://roamio-explorer.lovable.app/itinerary" },
+    ],
+    links: [{ rel: "canonical", href: "https://roamio-explorer.lovable.app/itinerary" }],
+  }),
   component: ItineraryListPage,
 });
 
