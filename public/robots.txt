@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /bookings
+Disallow: /itinerary
+
+Sitemap: https://roamio-explorer.lovable.app/sitemap.xml
