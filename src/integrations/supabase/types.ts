@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_country_assignments: {
+        Row: {
+          country_slug: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          country_slug: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          country_slug?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       booking_requests: {
         Row: {
           admin_reference: string | null
@@ -311,6 +332,27 @@ export type Database = {
         }
         Relationships: []
       }
+      operator_listing_assignments: {
+        Row: {
+          created_at: string
+          id: string
+          listing_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          listing_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          listing_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -390,11 +432,29 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      agent_can_access_itinerary: {
+        Args: { _itinerary_id: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_admin_or_super: { Args: { _user_id: string }; Returns: boolean }
+      is_country_agent_for: {
+        Args: { _country_slug: string; _user_id: string }
+        Returns: boolean
+      }
+      is_operator_for_listing: {
+        Args: { _listing_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      operator_can_access_itinerary: {
+        Args: { _itinerary_id: string; _user_id: string }
         Returns: boolean
       }
     }
